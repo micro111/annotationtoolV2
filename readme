@@ -1,0 +1,12 @@
+必要となるモジュール
+
+opencv-python  モーショントラッキング
+werkzeug       flaskに使う
+flask          web最と立ち上げ
+
+
+
+pip install opencv-python
+pip install Jinja2 redis Werkzeug
+pip insatll flask
+sudo apt-get install redis-server

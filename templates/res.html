@@ -1,0 +1,170 @@
+<html>
+<head>
+  <title>hello</title>
+</head>
+<body>
+  <style>
+  #block{
+    position: relative;
+  }
+  #img{
+    position: absolute;
+  }
+  #but{
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.25em 0.5em;
+  text-decoration: none;
+  color: #FFF;
+  background: #00bcd4;
+  transition: .4s;
+}
+
+  #but {
+  background: #1ec7bb;
+  }
+
+
+  #sample1{
+    position: absolute;
+    border: 4px solid;
+    border-color: red;
+  }
+  </style>
+  {% set name = data %}
+  {% set wid = w %}
+  {% set hei = h %}
+
+  <button id="but"type="button" onclick="setup({{wid}},{{hei}})">初期化</button>
+  <button id="but"type="button" onclick="send()">送信</button>
+  <div id="block">
+  <img id="img" src="data:image/jpg;base64,{{name}}" alt="">
+  <canvas id="sample1"/>
+</div>
+
+</body>
+
+<script>
+  startX=0;
+  startY=0;
+  xx=0;
+  yy=0;
+  wi=10
+  he=10
+  var targetElement = document.getElementById( "sample1" ) ;
+  var clientRect = targetElement.getBoundingClientRect() ;
+  var a = clientRect.left ;
+  var b = clientRect.top ;
+  var canvas = document.getElementById('sample1');
+  var context = canvas.getContext('2d');
+
+  function draw(x,y){
+	console.log(canvas);
+  xx=x-startX;
+  yy=y-startY;
+	var context=canvas.getContext('2d');
+	context.strokeStyle='#FFFF00';
+	context.strokeRect(startX,startY,x-startX,y-startY);
+  console.log(x,y,startX,startY)
+  console.log(wi,he)
+  }
+
+  canvas.onmousedown
+	= function(e){
+    canvas.width=wi;
+    canvas.height=he;
+		startX=e.pageX-a;
+		startY=e.pageY-b;
+	}
+
+
+  canvas.onmouseup
+  =function(e){
+  		var endX=e.pageX-a;
+  		var endY=e.pageY-b;
+  		draw(endX,endY);
+  }
+
+  function setup(w,h){
+  canvas.width = w;
+  wi=w;
+  canvas.height = h;
+  he=h;
+  }
+  function cle(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  function send(){
+    let f = document.createElement('form');
+    f.method = 'post';
+    f.action = '/ret';
+    f.innerHTML = '<input name="x" value=' + startX + '>' +
+                  '<input name="y" value=' + startY+ '>' +
+                  '<input name="xx" value=' + xx + '>' +
+                  '<input name="yy" value=' + yy + '>';
+    document.body.append(f);
+    f.submit();
+  }
+</script>
+</html>
+
+<!-- <html>
+<head>
+<meta charset='utf-8'>
+</head>
+<title>HTML5</title>
+<body>
+<canvas id='canvas'></canvas>
+<script>
+　startX=0;
+　startY=0;
+
+
+window.onload=function(){
+	canvas=$('canvas');
+	expandCanvas();
+	}
+
+
+function expandCanvas(){
+    var b = document.body;
+    var d = document.documentElement;
+    canvas.width = Math.max(b.clientWidth , b.scrollWidth, d.scrollWidth, d.clientWidth);
+    canvas.height = Math.max(b.clientHeight , b.scrollHeight, d.scrollHeight, d.clientHeight);
+　}
+
+canvas.onmousedown
+	= function(e){
+		startX=e.pageX;
+		startY=e.pageY;
+	}
+
+
+canvas.onmouseup
+	=function(e){
+			var endX=e.pageX;
+			var endY=e.pageY;
+			draw(endX,endY);
+	}
+
+
+
+
+function draw(x,y){
+	console.log(canvas);
+	var context=canvas.getContext('2d');
+	context.strokeStyle='#FFFF00';
+	context.strokeRect(startX,startY,x-startX,y-startY);
+
+	}
+
+
+function $(id){
+	return document.getElementById(id);
+}
+
+
+</script>
+</body>
+</html> -->

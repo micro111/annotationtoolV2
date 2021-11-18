@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>動画ファイルを転送</title>
+
+</head>
+
+<body>
+
+
+  <style>
+  h1 {
+    position: relative;
+    top:-450px;
+    padding: 0.25em 0;
+    shadow:10px
+  }
+  h1:after {
+    content: "";
+    display: block;
+    height: 4px;
+    background: -webkit-linear-gradient(to right, rgb(255, 186, 115), #ffb2b2);
+    background: linear-gradient(to right, rgb(255, 186, 115), #ffb2b2);
+  }
+  #main{
+    position: relative;
+  }
+
+  #bottan {
+    display:inline-block;
+    max-width:none;
+    font-size: 30px;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    background: #333;
+    border: 2px solid #333;
+    position: relative;
+    padding: 10px 10px 10px 10px;
+
+  }
+  #bottan:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 0 5px 10px;
+    border-color: transparent transparent transparent #fff;
+    position: absolute;
+    top: 40%;
+    left: 0;
+    right: 90px;
+    margin: auto;
+  }
+  #bottan:hover{
+    color: #333;
+    background: #fff;
+  }
+  #bottan:hover:before{
+    border-color: transparent transparent transparent #333;
+  }
+
+  #send{
+    position: relative;
+    top:-780px;
+  }
+
+  @import url('https://fonts.googleapis.com/css?family=Exo:400,700');
+
+  *{
+    margin: 0px;
+    padding: 0px;
+  }
+
+  body{
+    font-family: 'Exo', sans-serif;
+  }
+
+
+  .context {
+    width: 100%;
+    position: absolute;
+    top:50vh;
+
+  }
+
+  .context h1{
+    text-align: center;
+    color: #fff;
+    font-size: 50px;
+  }
+
+
+  .area{
+    background: #a5b8ff;
+    background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
+    width: 100%;
+    height:100vh;
+
+
+  }
+
+  .circles{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .circles li{
+    position: absolute;
+    display: block;
+    list-style: none;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    animation: animate 25s linear infinite;
+    bottom: -150px;
+
+  }
+
+  .circles li:nth-child(1){
+    left: 25%;
+    width: 80px;
+    height: 80px;
+    animation-delay: 0s;
+  }
+
+
+  .circles li:nth-child(2){
+    left: 10%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 2s;
+    animation-duration: 12s;
+  }
+
+  .circles li:nth-child(3){
+    left: 70%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 4s;
+  }
+
+  .circles li:nth-child(4){
+    left: 40%;
+    width: 60px;
+    height: 60px;
+    animation-delay: 0s;
+    animation-duration: 18s;
+  }
+
+  .circles li:nth-child(5){
+    left: 65%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 0s;
+  }
+
+  .circles li:nth-child(6){
+    left: 75%;
+    width: 110px;
+    height: 110px;
+    animation-delay: 3s;
+  }
+
+  .circles li:nth-child(7){
+    left: 35%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 7s;
+  }
+
+  .circles li:nth-child(8){
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    animation-delay: 15s;
+    animation-duration: 45s;
+  }
+
+  .circles li:nth-child(9){
+    left: 20%;
+    width: 15px;
+    height: 15px;
+    animation-delay: 2s;
+    animation-duration: 35s;
+  }
+
+  .circles li:nth-child(10){
+    left: 85%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 0s;
+    animation-duration: 11s;
+  }
+
+
+
+  @keyframes animate {
+
+    0%{
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+      border-radius: 0;
+    }
+
+    100%{
+      transform: translateY(-1000px) rotate(720deg);
+      opacity: 0;
+      border-radius: 50%;
+    }
+
+  }
+  </style>
+
+  <div id="main">
+    <div id="bg">
+      <div class="context">
+        <h1>アノテーション</h1>
+      </div>
+
+
+      <div class="area" >
+        <ul class="circles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div >
+    </div>
+
+    <div id="send">
+    <form method = post enctype = multipart/form-data>
+        <p>
+          <input id="bottan" type=file name=file>
+          <h2>ラベルを選んでください</h2>
+          <select id="bottan" name=label>
+            <option value="0">person</option>
+            <option value="1">bicycle</option>
+            <option value="2">car</option>
+            <option value="3">motorcycle</option>
+            <option value="4">airplane</option>
+            <option value="5">bus</option>
+            <option value="6">train</option>
+            <option value="7">truck</option>
+            <option value="8">boat</option>
+            <option value="9">traffic light</option>
+            <option value="10">fire hydrant</option>
+            <option value="11">stop sign</option>
+            <option value="12">parking meter</option>
+            <option value="13">bench</option>
+            <option value="14">bird</option>
+            <option value="15">cat</option>
+            <option value="16">dog</option>
+            <option value="17">horse</option>
+            <option value="18">sheep</option>
+            <option value="19">cow</option>
+            <option value="20">elephant</option>
+            <option value="21">bear</option>
+            <option value="22">zebra</option>
+            <option value="23">giraffe</option>
+            <option value="24">backpack</option>
+            <option value="25">umbrella</option>
+            <option value="26">handbag</option>
+            <option value="27">tie</option>
+            <option value="28">suitcase</option>
+            <option value="29">frisbee</option>
+            <option value="30">skis</option>
+            <option value="31">snowboard</option>
+            <option value="32">sports ball</option>
+            <option value="33">kite</option>
+            <option value="34">baseball bat</option>
+            <option value="35">baseball glove</option>
+            <option value="36">skateboard</option>
+            <option value="37">surfboard</option>
+            <option value="38">tennis racket</option>
+            <option value="39">bottle</option>
+            <option value="40">wine glass</option>
+            <option value="41">cup</option>
+            <option value="42">fork</option>
+            <option value="43">knife</option>
+            <option value="44">spoon</option>
+            <option value="45">bowl</option>
+            <option value="46">banana</option>
+            <option value="47">apple</option>
+            <option value="48">sandwich</option>
+            <option value="49">orange</option>
+            <option value="50">broccoli</option>
+            <option value="51">carrot</option>
+            <option value="52">hot dog</option>
+            <option value="53">pizza</option>
+            <option value="54">donut</option>
+            <option value="55">cake</option>
+            <option value="56">chair</option>
+            <option value="57">couch</option>
+            <option value="58">potted plant</option>
+            <option value="59">bed</option>
+            <option value="60">dining table</option>
+            <option value="61">toilet</option>
+            <option value="62">tv</option>
+            <option value="63">laptop</option>
+            <option value="64">mouse</option>
+            <option value="65">remote</option>
+            <option value="66">keyboard</option>
+            <option value="67">cell phone</option>
+            <option value="68">microwave</option>
+            <option value="69">oven</option>
+            <option value="70">toaster</option>
+            <option value="71">sink</option>
+            <option value="72">refrigerator</option>
+            <option value="73">book</option>
+            <option value="74">clock</option>
+            <option value="75">vase</option>
+            <option value="76">scissors</option>
+            <option value="77">teddy bear</option>
+            <option value="78">hair drier</option>
+            <option value="79">toothbrush</option>
+            </select>
+          <input type = submit value = Upload>
+        </p>
+
+      </form>
+    </div>
+  </div>
+</body>
+
+
+
+
+
+<script>
+
+function createBubble() {
+  var circleContainer = document.createElement('div');
+  circleContainer.classList.add('circle_container');
+  circleContainer.style.transform = "rotate(" + Math.floor(Math.random() * 360) + "deg)";
+
+  var circle = createCircle();
+  circleContainer.appendChild(circle);
+
+  return circleContainer;
+}
+
+function createCircle() {
+  var circle = document.createElement('div');
+  circle.classList.add('circle');
+  circle.style.animationDelay = (Math.random() * bubbleLifeTime) + 's';
+
+  var side = (5 + Math.floor(Math.random() * 5)) + 'px';
+  circle.style.width = side;
+  circle.style.height = side;
+
+  return circle;
+}
+</script>
+</html>
