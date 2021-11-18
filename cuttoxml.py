@@ -17,6 +17,9 @@ ALLOWED_EXTENSIONS = set(['mp4', 'mov','avi', 'm4a'])
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ur="http://localhost:8080/" #公開サイト
+
+os.makedirs("config", exist_ok=True)
+
 def start():
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     app.run(port=8080)  #なぜか好む8080で開放
