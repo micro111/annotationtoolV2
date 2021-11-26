@@ -15,6 +15,10 @@ from flask import *
 #中間画像の作成をするか　する:1　しない:0
 debug =0
 
+#拝啓合成を行う場合　（backフォルダに画像を1枚以上入れること。）
+randback = 0
+
+
 #flask web
 UPLOAD_FOLDER = './uploads'     #送られてくる動画を保存するもの
 ALLOWED_EXTENSIONS = set(['mp4', 'mov','avi', 'm4a'])
@@ -138,7 +142,8 @@ def up():
         os.makedirs(dir+"/bin", exist_ok=True)
         os.makedirs(dir+"/mask", exist_ok=True)
         os.makedirs(dir+"/masked", exist_ok=True)
-    backgroundimg=glob.glob('./back/*')
+    if randback:
+        backgroundimg=glob.glob('./back/*')
     digit = len(str(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))))
     n = 0
     while True:
@@ -175,14 +180,16 @@ def up():
             toukaimg = cv2.bitwise_and(gray,mask)
 
             #自動で背景を重ね合わせるため、ランダムで読み出しリサイズする
-            back=cv2.imread(backgroundimg[random.randint(0,len(backgroundimg)-1)])
-            back=cv2.cvtColor(back,cv2.COLOR_BGR2GRAY)
-            back=cv2.resize(back,dsize=(480,480))
+            if randback:
+                back=cv2.imread(backgroundimg[random.randint(0,len(backgroundimg)-1)])
+                back=cv2.cvtColor(back,cv2.COLOR_BGR2GRAY)
+                back=cv2.resize(back,dsize=(480,480))
 
-            #マスクと重ねる
-            mas2=cv2.bitwise_and(back,cv2.bitwise_not(mask))
-            #gousei = cv2.bitwise_or(mas2,toukaimg)
-            gousei=toukaimg
+                #マスクと重ねる
+                mas2=cv2.bitwise_and(back,cv2.bitwise_not(mask))
+                #gousei = cv2.bitwise_or(mas2,toukaimg)
+            else:
+                gousei=toukaimg
             if debug:
                 cv2.imwrite(dir+"/gray/"+str(n)+".jpg", gray)
                 cv2.imwrite(dir+"/bin/"+str(n)+".jpg", binary)
@@ -249,6 +256,7 @@ def uploaded_file(filename):
     os.makedirs(dir+"/images", exist_ok=True)
     os.makedirs(dir+"/labels", exist_ok=True)
     os.makedirs('images', exist_ok=True)
+    os.makedirs('config', exist_ok=True)
     ret, frame = cap.read()
     frame = frame_resize(frame)
     cv2.imwrite(os.path.join('images','{}{}.{}'.format(filename,'base','jpg')),frame)
