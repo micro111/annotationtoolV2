@@ -6,334 +6,205 @@
   <title>動画ファイルを転送</title>
 
 </head>
-
 <body>
 
 
   <style>
+
+  footer{
+      width: 100%;
+      background-color: #28506F;
+      color: #fff;
+      text-align: center;
+      padding:3px 0;
+      position: absolute;/*←絶対位置*/
+      bottom: 0; /*下に固定*/
+  }
+
+
+  body {
+    background-color: #28505D;
+  }
+
   h1 {
-    position: relative;
-    top:-450px;
-    padding: 0.25em 0;
-    shadow:10px
-  }
-  h1:after {
-    content: "";
-    display: block;
-    height: 4px;
-    background: -webkit-linear-gradient(to right, rgb(255, 186, 115), #ffb2b2);
-    background: linear-gradient(to right, rgb(255, 186, 115), #ffb2b2);
-  }
-  #main{
-    position: relative;
-  }
-
-  #bottan {
-    display:inline-block;
-    max-width:none;
     font-size: 30px;
-    text-align: center;
-    line-height: 50px;
-    color: #fff;
-    background: #333;
-    border: 2px solid #333;
+    font-size: 3rem;
     position: relative;
-    padding: 10px 10px 10px 10px;
-
-  }
-  #bottan:before {
-    content: "";
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 5px 0 5px 10px;
-    border-color: transparent transparent transparent #fff;
-    position: absolute;
-    top: 40%;
-    left: 0;
-    right: 90px;
-    margin: auto;
-  }
-  #bottan:hover{
-    color: #333;
-    background: #fff;
-  }
-  #bottan:hover:before{
-    border-color: transparent transparent transparent #333;
-  }
-
-  #send{
-    position: relative;
-    top:-780px;
-  }
-
-  @import url('https://fonts.googleapis.com/css?family=Exo:400,700');
-
-  *{
-    margin: 0px;
-    padding: 0px;
-  }
-
-  body{
-    font-family: 'Exo', sans-serif;
-  }
-
-
-  .context {
-    width: 100%;
-    position: absolute;
-    top:50vh;
-
-  }
-
-  .context h1{
+    padding: 1.5rem;
     text-align: center;
-    color: #fff;
-    font-size: 50px;
+    background: #f4f4f4;
+    border-radius: 2.5em; /* 角の丸み */
   }
 
-
-  .area{
-    background: #a5b8ff;
-    background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
-    width: 100%;
-    height:100vh;
-
-
-  }
-
-  .circles{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .circles li{
-    position: absolute;
+  h1 span {
+    font-size: 18px;
+    font-size: 1.8rem;
     display: block;
-    list-style: none;
-    width: 20px;
-    height: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    animation: animate 25s linear infinite;
-    bottom: -150px;
-
   }
 
-  .circles li:nth-child(1){
-    left: 25%;
-    width: 80px;
-    height: 80px;
-    animation-delay: 0s;
-  }
-
-
-  .circles li:nth-child(2){
-    left: 10%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 2s;
-    animation-duration: 12s;
-  }
-
-  .circles li:nth-child(3){
-    left: 70%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 4s;
-  }
-
-  .circles li:nth-child(4){
-    left: 40%;
+  h1:before {
+    position: absolute;
+    bottom: -10px;
+    left: calc(50% - 30px);
     width: 60px;
-    height: 60px;
-    animation-delay: 0s;
-    animation-duration: 18s;
+    height: 5px;
+    content: '';
+    border-radius: 3px;
+    background: #ffff;
   }
 
-  .circles li:nth-child(5){
-    left: 65%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 0s;
+  .stuff {
+    width: 25vw;
+  }
+  .textBox {
+    position: relative;
+    width: 100%;
+    padding-top: 15px;
+    height: 45px;
+    display: inline-flex;
+    margin-bottom: 3vh;
+  }
+  .textBox .text {
+    font-weight: 500;
+    width: calc(100% - 2vw);
+    height: 27px;
+    padding-left: 0.5vw;
+    background-color: transparent;
+    color: white;
+    position: absolute;
+    bottom: 0px;
+    outline: none;
+    border-style: solid;
+    border-color: #E3E7EA;
+    border-width: 0px 0px 5px 0px;
+    padding: 12px;
+    font-size: 20px;
+    -webkit-transition: border-color 0.45s linear;
+    transition: border-color 0.45s linear;
   }
 
-  .circles li:nth-child(6){
-    left: 75%;
-    width: 110px;
-    height: 110px;
-    animation-delay: 3s;
+  .textBox > input.text:hover {
+    border-color: black;
   }
 
-  .circles li:nth-child(7){
-    left: 35%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 7s;
+  .textBox .label {
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 1;
+    color: #0000;
+    position: absolute;
+    padding-left: 0.5vw;
+    bottom: 3px;
+    font-size: 20px;
+    font-weight: 300;
+    -webkit-transition-property: opacity bottom font-size;
+    transition-property: opacity bottom font-size;
+    -webkit-transition-duration: 0.45s;
+    transition-duration: 0.45s;
+    -webkit-transition-timing-function: cubic-bezier(.68,-0.55,.27,1.55);
+    transition-timing-function: cubic-bezier(.68,-0.55,.27,1.55);
   }
 
-  .circles li:nth-child(8){
-    left: 50%;
-    width: 25px;
-    height: 25px;
-    animation-delay: 15s;
-    animation-duration: 45s;
+  .textBox .error {
+    position: absolute;
+    margin-top: 48px;
+    width: 100%;
+    color: #e74c3c;
+    text-align: center;
   }
 
-  .circles li:nth-child(9){
-    left: 20%;
-    width: 15px;
-    height: 15px;
-    animation-delay: 2s;
-    animation-duration: 35s;
+  .textBox > input.text:hover ~ .label, .textBox > input.text:not([value=""]) ~ .label {
+    opacity: 1;
+    z-index: 1;
+    bottom: 85%;
+    font-size: 12px;
   }
 
-  .circles li:nth-child(10){
-    left: 85%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 0s;
-    animation-duration: 11s;
+  .textBox > input.text:hover ~ .label {
+    color: #FFFF;
   }
 
-
-
-  @keyframes animate {
-
-    0%{
-      transform: translateY(0) rotate(0deg);
-      opacity: 1;
-      border-radius: 0;
-    }
-
-    100%{
-      transform: translateY(-1000px) rotate(720deg);
-      opacity: 0;
-      border-radius: 50%;
-    }
-
+  .textBox ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #2B2B2B;
+    font-size: 20px;
+    font-weight: 200;
+    font-family: 'Roboto', sans-serif;
   }
+  .textBox ::-moz-placeholder { /* Firefox 19+ */
+    color: #2B2B2B;
+    font-size: 20px;
+    font-weight: 200;
+    font-family: 'Roboto', sans-serif;
+  }
+  .textBox :-ms-input-placeholder { /* IE 10+ */
+    color: #2B2B2B;
+    font-size: 20px;
+    font-weight: 200;
+    font-family: 'Roboto', sans-serif;
+  }
+  .textBox :-moz-placeholder { /* Firefox 18- */
+    color: #2B2B2B;
+    font-size: 20px;
+    font-weight: 200;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .send {
+      margin: 2em 0;
+      padding: 0.5em 1em;
+      border: solid 5px #FFF;
+      border-radius: 8px;
+  }
+
   </style>
 
-  <div id="main">
-    <div id="bg">
+  <div class="main">
+    <div class="bg">
       <div class="context">
-        <h1>アノテーション</h1>
+        <h1><span>自動アノテーション(改)</span></h1>
       </div>
-
-
-      <div class="area" >
-        <ul class="circles">
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
-      </div >
     </div>
 
-    <div id="send">
+
+    <div class="send">
     <form method = post enctype = multipart/form-data>
         <p>
-          <input id="bottan" type=file name=file>
-          <h2>ラベルを選んでください</h2>
-          <select id="bottan" name=label>
-            <option value="0">person</option>
-            <option value="1">bicycle</option>
-            <option value="2">car</option>
-            <option value="3">motorcycle</option>
-            <option value="4">airplane</option>
-            <option value="5">bus</option>
-            <option value="6">train</option>
-            <option value="7">truck</option>
-            <option value="8">boat</option>
-            <option value="9">traffic light</option>
-            <option value="10">fire hydrant</option>
-            <option value="11">stop sign</option>
-            <option value="12">parking meter</option>
-            <option value="13">bench</option>
-            <option value="14">bird</option>
-            <option value="15">cat</option>
-            <option value="16">dog</option>
-            <option value="17">horse</option>
-            <option value="18">sheep</option>
-            <option value="19">cow</option>
-            <option value="20">elephant</option>
-            <option value="21">bear</option>
-            <option value="22">zebra</option>
-            <option value="23">giraffe</option>
-            <option value="24">backpack</option>
-            <option value="25">umbrella</option>
-            <option value="26">handbag</option>
-            <option value="27">tie</option>
-            <option value="28">suitcase</option>
-            <option value="29">frisbee</option>
-            <option value="30">skis</option>
-            <option value="31">snowboard</option>
-            <option value="32">sports ball</option>
-            <option value="33">kite</option>
-            <option value="34">baseball bat</option>
-            <option value="35">baseball glove</option>
-            <option value="36">skateboard</option>
-            <option value="37">surfboard</option>
-            <option value="38">tennis racket</option>
-            <option value="39">bottle</option>
-            <option value="40">wine glass</option>
-            <option value="41">cup</option>
-            <option value="42">fork</option>
-            <option value="43">knife</option>
-            <option value="44">spoon</option>
-            <option value="45">bowl</option>
-            <option value="46">banana</option>
-            <option value="47">apple</option>
-            <option value="48">sandwich</option>
-            <option value="49">orange</option>
-            <option value="50">broccoli</option>
-            <option value="51">carrot</option>
-            <option value="52">hot dog</option>
-            <option value="53">pizza</option>
-            <option value="54">donut</option>
-            <option value="55">cake</option>
-            <option value="56">chair</option>
-            <option value="57">couch</option>
-            <option value="58">potted plant</option>
-            <option value="59">bed</option>
-            <option value="60">dining table</option>
-            <option value="61">toilet</option>
-            <option value="62">tv</option>
-            <option value="63">laptop</option>
-            <option value="64">mouse</option>
-            <option value="65">remote</option>
-            <option value="66">keyboard</option>
-            <option value="67">cell phone</option>
-            <option value="68">microwave</option>
-            <option value="69">oven</option>
-            <option value="70">toaster</option>
-            <option value="71">sink</option>
-            <option value="72">refrigerator</option>
-            <option value="73">book</option>
-            <option value="74">clock</option>
-            <option value="75">vase</option>
-            <option value="76">scissors</option>
-            <option value="77">teddy bear</option>
-            <option value="78">hair drier</option>
-            <option value="79">toothbrush</option>
-            </select>
+
+
+        <div class="stuff">
+        <div id="preview"></div>
+        <div class="textBox">
+          <input
+                 class="text"
+                 type="file"
+                 name=file
+                 placeholder="送信する動画"
+                 accept="video/*"
+                 onkeyup="this.setAttribute('value', this.value);"
+                 value=""/>
+          <label class="label">送信する動画を入力してね</label>
+          <label class="error"></label>
+        </div>
+        <div class="textBox">
+          <input
+                 class="text"
+                 type="text"
+                 name=label
+                 placeholder="ラベル名"
+                 onkeyup="this.setAttribute('value', this.value);"
+                 value=""/>
+          <label class="label">ラベル名を入力してね</label>
+          <label class="error"></label>
+        </div>
+        </div>
           <input type = submit value = Upload>
         </p>
-
       </form>
     </div>
   </div>
+  <footer>
+     <p>Chubu Uni. MPRG Mori Yuki</p>
+   </footer>
 </body>
 
 
@@ -342,27 +213,5 @@
 
 <script>
 
-function createBubble() {
-  var circleContainer = document.createElement('div');
-  circleContainer.classList.add('circle_container');
-  circleContainer.style.transform = "rotate(" + Math.floor(Math.random() * 360) + "deg)";
-
-  var circle = createCircle();
-  circleContainer.appendChild(circle);
-
-  return circleContainer;
-}
-
-function createCircle() {
-  var circle = document.createElement('div');
-  circle.classList.add('circle');
-  circle.style.animationDelay = (Math.random() * bubbleLifeTime) + 's';
-
-  var side = (5 + Math.floor(Math.random() * 5)) + 'px';
-  circle.style.width = side;
-  circle.style.height = side;
-
-  return circle;
-}
 </script>
 </html>
