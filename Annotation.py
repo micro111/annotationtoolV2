@@ -1,4 +1,4 @@
-import cv2 #モーショントラッキング
+import cv2
 import os
 import base64
 import json
@@ -13,10 +13,10 @@ from xml.etree.ElementTree import * #アノテーションした画像をxml形�
 from werkzeug.utils import secure_filename
 from flask import *
 #中間画像の作成をするか　する:1　しない:0
-debug =0
-
+debug = 1
+ansize=416
 #拝啓合成を行う場合　（backフォルダに画像を1枚以上入れること。）
-randback = 0
+randback = 1
 
 
 #flask web
@@ -27,7 +27,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def start():
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    app.run(host="0.0.0.0",port=8888)  #なぜか好む8080で開放
+    app.run(host="0.0.0.0",port=8080)  #なぜか好む8080で開放
 
 def allwed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS     # 拡張子を.以降取り出し、許可された拡張子か確認
@@ -57,9 +57,9 @@ def xmwrite(p,filename,posx,posy,posx2,posy2):   #tree構造を気合で・・�
     nm.text="?"
     sz=SubElement(an,'size')
     wi=SubElement(sz,'width')
-    wi.text="480"
+    wi.text="416"
     he=SubElement(sz,'height')
-    he.text="480"
+    he.text="416"
     dp=SubElement(sz,'depth')
     dp.text="3"
     ob=SubElement(an,'object')
@@ -125,12 +125,14 @@ def up():
     cnumber = 0#現在入っているclass.namesの行数をカウント
     with open('./data/class.names') as f: #元となるclass.namesを取得
         for line in f:
+            print(line,cnumber)
             cnumber += 1
             classfile.write(line) #元の中身をついでにコピー
     classfile.write(str(lab))
+    classfile.write("\n")
     classfile.close()
     customconfig = open("config/"+"custom"+date+".data",'a+')#カスタムデータの作成
-    customconfig.write("classes="+str(cnumber)+"\n"+"train="+currentpath+"/"+dir+"/train.txt\nvalid="+currentpath+"/"+dir+"/valid.txt\nnames="+currentpath+"/"+dir+"/classes.names")#クラス数、trainリスト、validリストを生成
+    customconfig.write("classes="+str(cnumber+1)+"\n"+"train="+currentpath+"/"+dir+"/train.txt\nvalid="+currentpath+"/"+dir+"/valid.txt\nnames="+currentpath+"/"+dir+"/classes.names")#クラス数、trainリスト、validリストを生成
     customconfig.close()
     valid = open(dir+"/valid.txt", 'a')
     train = open(dir+"/train.txt", 'a')
@@ -138,6 +140,7 @@ def up():
 
     os.makedirs(dir, exist_ok=True)
     if debug:
+        os.makedirs(dir+"/frame", exist_ok=True)
         os.makedirs(dir+"/gray", exist_ok=True)
         os.makedirs(dir+"/bin", exist_ok=True)
         os.makedirs(dir+"/mask", exist_ok=True)
@@ -148,20 +151,19 @@ def up():
     n = 0
     while True:
         ret, frame = cap.read()
-        if n==0:
-            t=frame.copy()
         if ret:
-            frame=cv2.resize(frame,dsize=(480,480))
-
+            if debug:
+                cv2.imwrite(dir+"/frame/"+str(n)+".jpg", frame)
+            frame=cv2.resize(frame,dsize=(ansize,ansize))
             #グレースケール
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(frame.copy(), cv2.COLOR_BGR2GRAY)
 
             # 2値化する。
-            ret, binary = cv2.threshold(gray, 80, 255,cv2.THRESH_BINARY_INV)
+            ret, binary = cv2.threshold(gray.copy(), 80, 255,cv2.THRESH_OTSU)
 
 
             #境界線を取得
-            contours, hierarchy = cv2.findContours(binary,
+            contours, hierarchy = cv2.findContours(binary.copy(),
                                                    cv2.RETR_LIST,
                                                    cv2.CHAIN_APPROX_SIMPLE)
 
@@ -169,7 +171,7 @@ def up():
             contour = max(contours, key=lambda x: cv2.contourArea(x))
 
             #囲う
-            img_contour = cv2.drawContours(frame, contour, -1, (0, 255, 0), 5)
+            img_contour = cv2.drawContours(frame.copy(), contour, -1, (0, 255, 0), 5)
 
             #背景を透過した画像を生成する。
             mask = np.zeros_like(frame)
@@ -177,17 +179,16 @@ def up():
             cv2.drawContours(mask, [contour], -1, color=255, thickness=-1)
 
             #グレースケールにマスク画像を重ねて透過する
-            toukaimg = cv2.bitwise_and(gray,mask)
+            toukaimg = cv2.bitwise_and(frame,frame,mask=mask)
 
             #自動で背景を重ね合わせるため、ランダムで読み出しリサイズする
             if randback:
                 back=cv2.imread(backgroundimg[random.randint(0,len(backgroundimg)-1)])
-                back=cv2.cvtColor(back,cv2.COLOR_BGR2GRAY)
-                back=cv2.resize(back,dsize=(480,480))
+                back=cv2.resize(back,dsize=(ansize,ansize))
 
                 #マスクと重ねる
-                mas2=cv2.bitwise_and(back,cv2.bitwise_not(mask))
-                #gousei = cv2.bitwise_or(mas2,toukaimg)
+                mas2=cv2.bitwise_and(back,back,mask=cv2.bitwise_not(mask))
+                gousei = cv2.bitwise_or(mas2,toukaimg)
             else:
                 gousei=toukaimg
             if debug:
@@ -202,14 +203,17 @@ def up():
 
             #取り出した値を各種ファイルに書き込む
             pos=" 1 "+str(x1)+" "+str(y1)+" "+str(x2)+" "+str(y2)
-            p1 = x1,y1
-            p2 = x2,y2
             pathnumber=str(n).zfill(digit)
             xmlfullpath=dir+"/"+filename+'-'+pathnumber+".xml"
 
             #アノテーションをtxt形式で書き出す。
             anotxt = open(dir+"/labels/"+filename+'-'+pathnumber+".txt", 'a')
-            anotxt.write(str(cnumber)+" "+str(x1)+" "+str(y1)+" "+str(x2)+" "+str(y2)+"\n")
+
+            xcen = float(x1 + (x1 + x2)) / 2 / ansize
+            ycen = float(y1 + (y1 + y2)) / 2 / ansize
+            w = float(x2) / ansize
+            h = float(y2) / ansize
+            anotxt.write(str(cnumber)+" "+'{:.6g}'.format(xcen)+" "+'{:.6g}'.format(ycen)+" "+'{:.6g}'.format(w)+" "+'{:.6g}'.format(h)+"\n")
             anotxt.close()
 
             #画像を保存する(未加工ver)
@@ -220,7 +224,10 @@ def up():
             cv2.imwrite(os.path.join(dir+"/bbox",'{}-{}.{}'.format(filename,pathnumber,ext)),gousei)
 
             #train.txtとopencvのlist.txtを書く
-            train.write(currentpath+"/"+dir+"/images/"+filename+"-"+pathnumber+".jpg"'\n')
+            if random.randint(0,100)<20:
+                valid.write(currentpath+"/"+dir+"/images/"+filename+"-"+pathnumber+".jpg"'\n')
+            else:
+                train.write(currentpath+"/"+dir+"/images/"+filename+"-"+pathnumber+".jpg"'\n')
             list.write(currentpath+"/"+dir+"/images/"+filename+'-'+pathnumber+ext+pos+'\n')
             jpgfullname=filename+'-'+pathnumber+".jpg"
             xmwrite(xmlfullpath,jpgfullname,str(x1),str(y1),str(x2),str(y2))
